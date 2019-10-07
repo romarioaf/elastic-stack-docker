@@ -20,5 +20,7 @@ services:
     container_name: logstash_service
     image: logstash:6.8.3
     volumes: 
-      - ./config/jvm.options:/config/jvm.options
+      - ./logstash/config/drives/:/usr/share/logstash/config/drives
+      - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options
+      - ./logstash/config/users.conf:/usr/share/logstash/config/users.conf
     depends_on: ['elasticsearch']
