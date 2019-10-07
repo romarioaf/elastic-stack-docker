@@ -5,6 +5,9 @@ services:
     image: elasticsearch:6.4.2
     ports:
       - "9200:9200"
+    volumes:
+      - ./elasticsearch/esdata/:/usr/share/elasticsearch/data/
+      - ./elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options
   kibana:
     container_name: kibana_service
     image: kibana:6.4.2
@@ -16,4 +19,6 @@ services:
   logstash:
     container_name: logstash_service
     image: logstash:6.8.3
+    volumes: 
+      - ./config/jvm.options:/config/jvm.options
     depends_on: ['elasticsearch']
