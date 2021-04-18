@@ -2,23 +2,37 @@ version: "3"
 services:
   elasticsearch:
     container_name: elasticsearch_service
-    image: elasticsearch:6.4.2
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.9.0
     ports:
-      - "9200:9200"
+      - 9200:9200
+      - 9300:9300
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
     volumes:
-      - ./elasticsearch/esdata/:/usr/share/elasticsearch/data/
-      - ./elasticsearch/config/jvm.options:/usr/share/elasticsearch/config/jvm.options
+      - ./elasticseach-data/:/usr/share/elasticsearch/data/
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+      nofile:
+        soft: 65536
+        hard: 65536
+    cap_add:
+      - IPC_LOCK
+      
   kibana:
     container_name: kibana_service
-    image: kibana:6.4.2
+    image: docker.elastic.co/kibana/kibana:7.9.0
     depends_on: ['elasticsearch']
     ports:
       - "5601:5601"
     environment:
       - ELASTICSEARCH_URL=http://elasticsearch:9200
+  
   logstash:
     container_name: logstash_service
-    image: logstash:6.8.3
+    image: logstash:7.4.0
     volumes: 
       - ./logstash/config/drives/:/usr/share/logstash/config/drives
       - ./logstash/config/jvm.options:/usr/share/logstash/config/jvm.options
